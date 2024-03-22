@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.integrate import odeint
+from scipy.integrate import odeint, solve_ivp
 
 '''
 Open questions:
@@ -38,7 +38,7 @@ class Basic_Kuramoto:
         Returns:
             dtheta_dt: array of phase derivatives
         '''
-        dtheta_dt = self.omega + (self.K / self.N) * np.sum(np.sin(np.subtract.outer(theta, theta)), axis=1)
+        dtheta_dt = self.omega + (self.K / self.N) * np.sum(np.sin(np.subtract.outer(theta, theta)), axis=0)
         return dtheta_dt
     
     def simulate(self):
@@ -51,6 +51,7 @@ class Basic_Kuramoto:
         '''
         t = np.arange(0, self.T, self.dt)
         theta = odeint(self.kuramoto_dynamics, self.theta0, t)
+    
         return t, theta
     
     def order_parameter(self, theta):
@@ -101,7 +102,7 @@ class Dynamic_Kuramoto:
         '''
         # Find the index in the K_values array that corresponds to the current time step
         K_index = min(int(t / self.dt), len(self.K) - 1)
-        dtheta_dt = self.omega + (self.K[K_index] / self.N) * np.sum(np.sin(np.subtract.outer(theta, theta)), axis=1)
+        dtheta_dt = self.omega + (self.K[K_index] / self.N) * np.sum(np.sin(np.subtract.outer(theta, theta)), axis=0)
         return dtheta_dt
     
     def simulate(self):
