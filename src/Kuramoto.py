@@ -7,7 +7,7 @@ Open questions:
 '''
 
 
-class Basic_Kuramoto:
+class Kuramoto:
     def __init__(self, N, K, omega, theta0, T, dt):
         '''
         Simple fully connected Kuramoto model with constant natural frequencies and constant coupling strength.
@@ -69,7 +69,7 @@ class Basic_Kuramoto:
 
 
 
-class Dynamic_Kuramoto:
+class Time_varying_coupling_Kuramoto:
     def __init__(self, N, K, omega, theta0, T, dt):
         '''
         Dynamic Kuramoto model with time-varying coupling streangths.

@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from Kuramoto import Basic_Kuramoto, Dynamic_Kuramoto
+from Kuramoto import Kuramoto, Time_varying_coupling_Kuramoto
 
 '''
 How this script is structured:
@@ -107,7 +107,7 @@ def plot_order_parameter_basic(N=N, omega=omega, theta0=theta0, T=T, dt=dt, K_va
     fig.suptitle(f'Time Evolution of the Order Parameter R for Different K Values with N = {N} oscillators')
 
     for ax, K in zip(axes, K_values):
-        kuramoto = Basic_Kuramoto(N, K, omega, theta0, T, dt)
+        kuramoto = Kuramoto(N, K, omega, theta0, T, dt)
         t, theta = kuramoto.simulate()
         R = np.array([kuramoto.order_parameter(theta_i) for theta_i in theta])
         ax.plot(t, R)
@@ -126,7 +126,7 @@ def plot_steady_order_basic(N=N, omega=omega, theta0=theta0, T=T, dt=dt, K_range
 
     # Simulate for each K value and calculate average R
     for K in K_range:
-        kuramoto = Basic_Kuramoto(N, K, omega, theta0, T, dt)
+        kuramoto = Kuramoto(N, K, omega, theta0, T, dt)
         t, theta = kuramoto.simulate()
         R = np.array([kuramoto.order_parameter(theta_i) for theta_i in theta])
 
@@ -153,7 +153,7 @@ def plot_timevarying_K_dynamic(N=N, omega=omega, theta0=theta0, T=T, dt=dt, t=t,
         # Generate K values with the given phase offset
         K = generate_K(t, gamma=gamma, mu=mu, g=g, psi=psi)
         
-        kuramoto = Dynamic_Kuramoto(N, K, omega, theta0, T, dt)
+        kuramoto = Time_varying_coupling_Kuramoto(N, K, omega, theta0, T, dt)
         t, theta = kuramoto.simulate()
         
         # Calculate the order parameter R for each time step
@@ -185,7 +185,7 @@ def plot_timevarying_K_dynamic_m_runs(N=N, T=T, dt=dt, t=t, gamma=gamma, mu=mu, 
                 K = generate_K(t, gamma=gamma, mu=mu, g=g, psi=psi)
                 
                 # Initialize the Kuramoto model with the generated K values
-                kuramoto = Dynamic_Kuramoto(N, K, omega, theta0, T, dt)
+                kuramoto = Time_varying_coupling_Kuramoto(N, K, omega, theta0, T, dt)
                 t, theta = kuramoto.simulate()
                 
                 # Calculate the order parameter R for each time step
@@ -208,5 +208,5 @@ def plot_timevarying_K_dynamic_m_runs(N=N, T=T, dt=dt, t=t, gamma=gamma, mu=mu, 
     
 # plot_order_parameter_basic()
 # plot_steady_order_basic()
-# plot_timevarying_K_dynamic()
-plot_timevarying_K_dynamic_m_runs()
+plot_timevarying_K_dynamic()
+# plot_timevarying_K_dynamic_m_runs()
