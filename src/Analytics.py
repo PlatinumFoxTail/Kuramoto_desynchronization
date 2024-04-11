@@ -201,6 +201,29 @@ def plot_timevarying_K_dynamic_m_runs(N=N, T=T, dt=dt, t=t, gamma=gamma, mu=mu, 
     # plt.tight_layout()
     plt.show()
 
+def plot_g_omega_distribution(omega):
+    g_omega_values = [g_omega(omega_val) for omega_val in omega]
+    
+    plt.figure(figsize=(8, 6))
+    plt.plot(omega, g_omega_values, label='g(omega)')
+    plt.title('Probability density as a function of omega')
+    plt.xlabel('Natural frequency omega')
+    plt.ylabel('Probability density g(omega)')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+def plot_Kij(t, gamma, mu, g_ij, phase_offset):
+    # Calculating the time-varying coupling strength
+    K = generate_K(t, gamma=gamma, mu=mu, g=g_ij, psi=phase_offset)
+    
+    plt.figure(figsize=(8, 6))
+    plt.plot(t, K)
+    plt.title(f'Time-varying coupling strength K_ij(t) for frequency offset {g_ij} and phase offset {phase_offset}')
+    plt.xlabel('Time')
+    plt.ylabel('Coupling strength K_ij(t)')
+    plt.grid(True)
+    plt.show()
 
 #-------------------------------------------------------------------------------------------
     
@@ -208,5 +231,7 @@ def plot_timevarying_K_dynamic_m_runs(N=N, T=T, dt=dt, t=t, gamma=gamma, mu=mu, 
     
 # plot_order_parameter_basic()
 # plot_steady_order_basic()
-plot_timevarying_K_dynamic()
+# plot_timevarying_K_dynamic()
 # plot_timevarying_K_dynamic_m_runs()
+# plot_g_omega_distribution(omega)
+plot_Kij(t, gamma=0.7, mu=0.4, g_ij=1, phase_offset=3.14)
