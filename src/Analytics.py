@@ -33,7 +33,7 @@ omega = np.linspace(F-spread,F+spread,N) # Natural frequencies
 
 theta0 = np.random.uniform(0, 2*np.pi, N)  # Initial phases
 T = 100  # Total time
-dt = 0.01  # Time step
+dt = 0.1  # Time step
 
 K_values = [0.1, 1, 5]  # Different coupling strengths to simulate for basic Kuramoto model
 K_range = np.linspace(0.0001, 5, 40) # Range of coupling strengths for simulation of steady state order parameter
@@ -54,7 +54,7 @@ phase_offsets = [0, np.pi, np.random.uniform(0, 2*np.pi)]  # Phase offsets
 #---------------------------------------------
 
 t = np.arange(0, T, dt)  # Time array for time-varying coupling strength
-
+plot_t = np.arange(0, T/dt)  # Time step array for same x-axis as in the Cummin et al. paper
 #-------------------------------------------------------------------------------------------
 
 # Function to calculate the time-varying coupling strength based on Cummin et al. paper
@@ -79,7 +79,7 @@ def generate_K(t, gamma, mu, g, psi):
 # Define the distribution g(ω) for sampling the natural frequencies (from Cummin et al. paper)
 def g_omega(omega):
     if abs(omega) < 1:
-        return (1 - omega**2) / (np.pi - 2) * (1 + omega**2)
+        return (1 - omega**2) / ((np.pi - 2) * (1 + omega**2))
     else:
         return 0
 
@@ -192,35 +192,37 @@ def plot_timevarying_K_dynamic_m_runs(N=N, T=T, dt=dt, t=t, gamma=gamma, mu=mu, 
                 R = np.array([kuramoto.order_parameter(theta_i) for theta_i in theta])
                 
                 # Plot the order parameter R for this run
-                ax.plot(t, R, lw=1, alpha=0.5)  # Use a lower alpha to make individual runs distinguishable
+                ax.plot(plot_t, R, lw=1, alpha=0.5)  # Use a lower alpha to make individual runs distinguishable
 
             ax.set_title(f'freq = {g}, offset = {psi:.2f}', fontsize=10)
-            ax.set_xlabel('Time', fontsize=9)
+            ax.set_xlabel('Time steps dt', fontsize=9)
             ax.set_ylabel('Order Parameter R', fontsize=9)
     plt.subplots_adjust(hspace=0.3, wspace=0.3)
     # plt.tight_layout()
     plt.show()
 
-def plot_g_omega_distribution(omega):
-    g_omega_values = [g_omega(omega_val) for omega_val in omega]
-    
-    plt.figure(figsize=(8, 6))
-    plt.plot(omega, g_omega_values, label='g(omega)')
-    plt.title('Probability density as a function of omega')
-    plt.xlabel('Natural frequency omega')
-    plt.ylabel('Probability density g(omega)')
-    plt.legend()
+def plot_g_omega_distribution():
+    omega_values = np.linspace(-1.5, 1.5, 300)
+
+    # Calculate g(omega) for each value
+    g_values = np.array([g_omega(omega) for omega in omega_values])
+
+    # Plot the probability distribution shape
+    plt.figure(figsize=(10, 5))
+    plt.plot(omega_values, g_values, label=r'$g(\omega)$')
+    plt.xlabel(r'$\omega$')
+    plt.ylabel(r'$g(\omega)$')
+    plt.title('Probability Distribution Shape of $g(\omega)$')
     plt.grid(True)
     plt.show()
 
 def plot_Kij(t, gamma, mu, g_ij, phase_offset):
     # Calculating the time-varying coupling strength
     K = generate_K(t, gamma=gamma, mu=mu, g=g_ij, psi=phase_offset)
-    
     plt.figure(figsize=(8, 6))
-    plt.plot(t, K)
+    plt.plot(plot_t, K)
     plt.title(f'Time-varying coupling strength K_ij(t) for frequency offset {g_ij} and phase offset {phase_offset}')
-    plt.xlabel('Time')
+    plt.xlabel('Time steps dt')
     plt.ylabel('Coupling strength K_ij(t)')
     plt.grid(True)
     plt.show()
@@ -232,6 +234,6 @@ def plot_Kij(t, gamma, mu, g_ij, phase_offset):
 # plot_order_parameter_basic()
 # plot_steady_order_basic()
 # plot_timevarying_K_dynamic()
-# plot_timevarying_K_dynamic_m_runs()
-# plot_g_omega_distribution(omega)
-plot_Kij(t, gamma=0.7, mu=0.4, g_ij=1, phase_offset=3.14)
+plot_timevarying_K_dynamic_m_runs()
+# plot_g_omega_distribution()
+# plot_Kij(t, gamma=0.7, mu=0.4, g_ij=1, phase_offset=3.14)
